@@ -134,11 +134,11 @@
             m '.theme-container',
               m '.settings-title', '테마선택'
               m '.theme-list',
-                m '.theme-item[data-theme=\'default\']',
+                m '.theme-item[data-theme=\'default\']', mcom.onThemeItemHandler,
                   m '.theme-thumb.default'
-                m '.theme-item[data-theme=\'red\']',
+                m '.theme-item[data-theme=\'red\']', mcom.onThemeItemHandler,
                   m '.theme-thumb.red'
-                m '.theme-item[data-theme=\'blue\']',
+                m '.theme-item[data-theme=\'blue\']', mcom.onThemeItemHandler,
                   m '.theme-thumb.blue'
 
 Meteor.startup ->
