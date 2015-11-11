@@ -21,55 +21,6 @@
     bg: 'RGBA(0, 91, 177, 1)'
     txt: 'RGBA(255, 255, 255, 0.95)'
 
-#Template.body.events
-#  'touchend .quote': (e)->
-#    e.preventDefault
-#
-#  'touchend .menu': (e)->
-#    e.preventDefault()
-#
-#    pageFromBottom('#page-settings')
-#
-#  'touchend #page-settings .close': (e)->
-#    e.preventDefault()
-#
-#    pageSlideDown('#page-main')
-#
-#  'touchend #page-settings .theme-item': (e)->
-#    e.preventDefault()
-#
-#    themeName = $(e.target).parent().attr('data-theme')
-#
-#    bgColor = theme[themeName].bg
-#    txtColor = theme[themeName].txt
-#
-#    $(e.target).css('border-radius', '50%')
-#
-#    TweenMax.to $(e.target), 0.4,
-#      borderRadius: '50%'
-#      scaleX: 15
-#      scaleY: 15
-#      clearProps: "all"
-#      onComplete: ->
-#        $('.current-page').removeClass('current-page')
-#        $('#page-main').addClass('current-page')
-#
-#
-#    pageMain = document.getElementById('page-main')
-#    quotes = document.querySelectorAll('.txt')
-#
-#
-#    pageMain.style.backgroundColor = bgColor
-#    for quote in quotes
-#      quote.style.opacity = 0
-#      quote.style.color = txtColor
-#      TweenMax.to '.quote, .menu', 0.5,
-#        delay: 0.4
-#        opacity: 1
-#      TweenMax.to '.author', 0.5,
-#        delay: 0.9
-#        opacity: 1
-
 @mcom=
   onMenuDown: (e)->
     e.preventDefault()
@@ -116,7 +67,11 @@
   onThemeItemHandler:
     onmouseup: (e)-> mcom.onThemeItemDown(e)
     ontouchend: (e)-> mcom.onThemeItemDown(e)
-
+  themeItem:
+    controller: (data)-> data
+    view: (data)->
+      m ".theme-item[data-theme=\'#{data.theme}\']", mcom.onThemeItemHandler,
+        m ".theme-thumb.#{data.theme}"
   Main:
     view: ->
       m '[id=\'viewport\']',
@@ -134,12 +89,9 @@
             m '.theme-container',
               m '.settings-title', '테마선택'
               m '.theme-list',
-                m '.theme-item[data-theme=\'default\']', mcom.onThemeItemHandler,
-                  m '.theme-thumb.default'
-                m '.theme-item[data-theme=\'red\']', mcom.onThemeItemHandler,
-                  m '.theme-thumb.red'
-                m '.theme-item[data-theme=\'blue\']', mcom.onThemeItemHandler,
-                  m '.theme-thumb.blue'
+                m.component mcom.themeItem, theme: 'default'
+                m.component mcom.themeItem, theme: 'red'
+                m.component mcom.themeItem, theme: 'blue'
 
 Meteor.startup ->
   m.mount document.body, mcom.Main
