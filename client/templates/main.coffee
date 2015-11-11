@@ -1,10 +1,14 @@
-# @MAIN=
-#   # it is fired when the initial HTML document has been completely loaded and parsed.
-#   didLoaded: ->
-#     console.log 'MAIN didLoaded'
+@Quotes = [
+  {
+    quote: '"서두르지 말라. <br/> 그러나 쉬지도 말라."'
+    author: '- 누군가가'
+  }
+  {
+    quote: '"밥먹자. 배고프다"'
+    author: '- 누군가가'
+  }
+]
 
-#   Main:
-#     view: ->
 
 @theme =
   default:
@@ -20,9 +24,6 @@
 Template.body.events
   'touchend .quote': (e)->
     e.preventDefault
-
-    # $('.quote').text('Hello')
-    # $('.author').text('h??')
 
   'touchend .menu': (e)->
     e.preventDefault()
@@ -45,9 +46,7 @@ Template.body.events
     $(e.target).css('border-radius', '50%')
 
     TweenMax.to $(e.target), 0.4,
-      # position: 'absolute'
       borderRadius: '50%'
-      # ease: Power4.easeOut
       scaleX: 15
       scaleY: 15
       clearProps: "all"
@@ -55,8 +54,6 @@ Template.body.events
         $('.current-page').removeClass('current-page')
         $('#page-main').addClass('current-page')
 
-
-    # pageSlideDown('#page-main')
 
     pageMain = document.getElementById('page-main')
     quotes = document.querySelectorAll('.txt')
@@ -72,17 +69,6 @@ Template.body.events
       TweenMax.to '.author', 0.5,
         delay: 0.9
         opacity: 1
-        # onComplete: ->
-
-
-    # TweenMax.to pageMain, 0.5,
-    #   # delay: 0.2
-    #   background: bgColor
-
-    # for quote in quotes
-    #   TweenMax.to quote, 0.5,
-    #     # delay: 0.2
-    #     color: txtColor
 
 Template.body.onRendered ->
   pageMain = document.getElementById('page-main')
