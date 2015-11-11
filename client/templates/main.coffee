@@ -70,33 +70,36 @@
   themeItem:
     controller: (data)-> data
     view: (data)->
-      m ".theme-item[data-theme=\'#{data.theme}\']", mcom.onThemeItemHandler,
+      m ".theme-item[data-theme='#{data.theme}']", mcom.onThemeItemHandler,
         m ".theme-thumb.#{data.theme}"
   Main:
     view: ->
-      m '[id=\'viewport\']',
-        m '.page.current-page[id=\'page-main\']',
-          m '.menu.txt', mcom.onMenuHandler,
-            m '.wrapper',
-              m 'i.ion-ios-gear-outline'
-          m '.quote-wrapper',
-            m '.quote.txt', m.trust "서두르지 말라. <br/> 그러나 쉬지도 말라."
-            m '.author.txt', '- 누군가가'
-        m '.page[id=\'page-settings\']',
-          m '.close', mcom.onCloseHandler,
-            m 'i.ion-ios-close-empty'
-          m '.settings-container',
-            m '.theme-container',
-              m '.settings-title', '테마선택'
-              m '.theme-list',
-                m.component mcom.themeItem, theme: 'default'
-                m.component mcom.themeItem, theme: 'red'
-                m.component mcom.themeItem, theme: 'blue'
+      m "#viewport",
+        m ".page.current-page#page-main",
+          style:
+            backgroundColor: theme.default.bg
+          m ".menu.txt", mcom.onMenuHandler,
+            m ".wrapper",
+              m "i.ion-ios-gear-outline"
+          m ".quote-wrapper",
+            m ".quote.txt",
+              style:
+                color: theme.default.txt
+            , m.trust "서두르지 말라. <br/> 그러나 쉬지도 말라."
+            m ".author.txt",
+              style:
+                color: theme.default.txt
+            , "- 누군가가"
+        m ".page#page-settings",
+          m ".close", mcom.onCloseHandler,
+            m "i.ion-ios-close-empty"
+          m ".settings-container",
+            m ".theme-container",
+              m ".settings-title", "테마선택"
+              m ".theme-list",
+                m.component mcom.themeItem, theme: "default"
+                m.component mcom.themeItem, theme: "red"
+                m.component mcom.themeItem, theme: "blue"
 
 Meteor.startup ->
   m.mount document.body, mcom.Main
-  pageMain = document.getElementById('page-main')
-  quotes = document.querySelectorAll('.txt')
-  pageMain.style.backgroundColor = theme.default.bg
-  for quote in quotes
-    quote.style.color = theme.default.txt
