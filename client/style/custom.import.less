@@ -1,0 +1,99 @@
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  pointer-events: none;
+  z-index: 1;
+
+  .translate(100%, 100%);
+
+  &.current-page {
+    pointer-events: auto;
+    z-index: 999;
+    .translate(0, 0);
+  }
+  &.flex {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+//=============================================================================
+// Main Page
+
+#page-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+}
+
+#page-main .menu {
+  position: absolute;
+
+  top: 8pt;
+  left: 8pt;
+
+  font-size: 2rem;
+}
+
+#page-main .quote-wrapper {
+  padding: 8pt;
+  .quote { font-size: 2rem; text-align: center; word-wrap: word; }
+  .author { text-align: center; font-style: italic; margin-top: 2rem; }
+}
+
+//=============================================================================
+// Settings Page
+
+#page-settings {
+  background: white;
+  padding: 8pt;
+}
+
+#page-settings .close {
+  font-size: 2.5rem;
+}
+
+.settings-title {
+  font-size: 1.5rem;
+}
+
+.theme-container {
+
+}
+
+.theme-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 -0.25rem;
+  margin-top: 0.5rem;
+}
+
+.theme-item {
+  width: 25vmin;
+  height: 25vmin;
+  margin: 0.25rem;
+}
+
+.theme-thumb {
+  width: 100%;
+  height: 100%;
+  &.default {
+    background: RGBA(255, 242, 211, 1);
+  }
+  &.red {
+    background: RGBA(255, 72, 65, 1);
+  }
+  &.blue {
+    background: RGBA(0, 91, 177, 1);
+  }
+}

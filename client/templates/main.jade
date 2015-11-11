@@ -1,0 +1,37 @@
+head
+  title 하루 하나
+  meta(charset="UTF-8")
+  meta(name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui")
+
+body
+  #viewport
+    .page.current-page#page-main
+      .menu.txt
+        .wrapper
+          i.ion-ios-gear-outline
+      .quote-wrapper
+        .quote.txt
+          | "서두르지 말라. <br/> 그러나 쉬지도 말라."
+        .author.txt
+          | - 누군가가
+
+    .page#page-settings
+      .close
+        i.ion-ios-close-empty
+
+      .settings-container
+
+        .theme-container
+
+          .settings-title
+            | 테마선택
+
+          .theme-list
+            .theme-item(data-theme="default")
+              .theme-thumb.default
+
+            .theme-item(data-theme="red")
+              .theme-thumb.red
+
+            .theme-item(data-theme="blue")
+              .theme-thumb.blue
