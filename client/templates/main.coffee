@@ -90,30 +90,43 @@
 
 Template.body.events
   'touchstart .quote-wrapper.active': (e)->
-    touchstart.x = e.originalEvent.touches[0].pageX
-    touchstart.y = e.originalEvent.touches[0].pageY
+    touchstart.x = e.originalEvent.touches[0].clientX
+    touchstart.y = e.originalEvent.touches[0].clientY
 
   'touchmove .quote-wrapper.active': (e)->
     e.preventDefault
     touch = e.originalEvent.touches[0]
 
     activeQuote = $(e.target)
-    # activeQuote.css('left', touch.clientX + 'px')
-    TweenMax.to activeQuote, 0.05,
-      left: touch.clientX + 'px'
+
+    if touchstart.x > touch.clientX
+      # If Swipe from Right to Left <-o
+      if touch.clientX > $(window).width()/2
+        # Prevent <-o moving to right side of screen
+        return false
+      else
+        activeQuote.css('left', touch.clientX + 'px')
+
+    if touchstart.x < touch.clientX
+      # If Swipe from Left to Right o->
+      if touch.clientX < $(window).width()/2
+        # Prevent o-> moving to left side of screen
+        return false
+      else
+        activeQuote.css('left', touch.clientX + 'px')
 
 
   'touchend .quote-wrapper.active': (e)->
     e.preventDefault
 
     touchend =
-      x: e.originalEvent.changedTouches[0].pageX
-      y: e.originalEvent.changedTouches[0].pageY
+      x: e.originalEvent.changedTouches[0].clientX
+      y: e.originalEvent.changedTouches[0].clientY
 
 
     activeQuote = $(e.target)
 
-    if touchstart.x >= $(window).width()/2.25 and touchstart.x > touchend.x
+    if touchstart.x >= $(window).width()/2 and touchstart.x > touchend.x
       # Swipe Left
       nextQuote = $(e.target).next()
 
