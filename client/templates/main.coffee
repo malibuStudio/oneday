@@ -99,13 +99,18 @@ Template.body.events
 
     activeQuote = $(e.target)
 
+
+
     if touchstart.x > touch.clientX
       # If Swipe from Right to Left <-o
       if touch.clientX > $(window).width()/2
         # Prevent <-o moving to right side of screen
         return false
       else
-        activeQuote.css('left', touch.clientX + 'px')
+        # activeQuote.css('left', touch.clientX + 'px')
+        TweenMax.to activeQuote, 0.12,
+          left: touch.clientX + 'px'
+
 
     if touchstart.x < touch.clientX
       # If Swipe from Left to Right o->
@@ -113,7 +118,9 @@ Template.body.events
         # Prevent o-> moving to left side of screen
         return false
       else
-        activeQuote.css('left', touch.clientX + 'px')
+        # activeQuote.css('left', touch.clientX + 'px')
+        TweenMax.to activeQuote, 0.12,
+          left: touch.clientX + 'px'
 
 
   'touchend .quote-wrapper.active': (e)->
