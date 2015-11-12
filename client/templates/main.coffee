@@ -22,8 +22,39 @@
     txt: 'RGBA(255, 255, 255, 0.95)'
 
 Template.body.events
-  'touchend .quote': (e)->
+  'touchend .quote-wrapper.active': (e)->
     e.preventDefault
+
+    activeQuote = $(e.target)
+    nextQuote = $(e.target).next()
+
+    console.log 'activeQuote', activeQuote
+    console.log 'nextQuote', nextQuote
+
+    if nextQuote.length is 0
+      nextQuote = $('.quote-wrapper:first')
+
+    nextQuote.css(
+      'left': '100%'
+      'z-index': 999
+    )
+
+    TweenMax.to activeQuote, 0.31,
+      x: '-100%'
+      opacity: 0
+      clearProps: 'all'
+      ease: Power4.easeOut
+      onComplete: ->
+        activeQuote.removeClass('active')
+
+    TweenMax.to nextQuote, 0.31,
+      left: '50%'
+      opacity: 1
+      clearProps: 'all'
+      ease: Power4.easeIn
+      onComplete: ->
+        nextQuote.addClass('active')
+
 
   'touchend .menu': (e)->
     e.preventDefault()
@@ -34,6 +65,13 @@ Template.body.events
     e.preventDefault()
 
     pageSlideDown('#page-main')
+  'touchstart #page-settings .theme-item': (e)->
+    TweenMax.to $(e.target), 0.32,
+      borderRadius: '50%'
+      scaleX: 0.8
+      scaleY: 0.8
+      ease: Bounce.easeOut
+      # clearProps: "all"
 
   'touchend #page-settings .theme-item': (e)->
     e.preventDefault()

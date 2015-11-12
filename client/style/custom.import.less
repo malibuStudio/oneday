@@ -45,9 +45,28 @@
 }
 
 #page-main .quote-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  .translate(-50%, -50%);
+
+  width: 100%;
+
+  z-index: 99;
+
+  opacity: 0;
+
   padding: 8pt;
   .quote { font-size: 2rem; text-align: center; word-wrap: word; }
   .author { text-align: center; font-style: italic; margin-top: 2rem; }
+
+  &.active {
+    z-index: 999;
+    opacity: 1;
+  }
+  * {
+    pointer-events: none;
+  }
 }
 
 //=============================================================================
