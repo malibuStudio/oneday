@@ -21,96 +21,160 @@
     bg: 'RGBA(0, 91, 177, 1)'
     txt: 'RGBA(255, 255, 255, 0.95)'
 
-Template.body.swipe = (e, d)->
-  activeQuote = $(e.target)
-  console.log d
-  if d is 1
-    nextQuote = $(e.target).next()
-    nextQuote.css(
-      'left': '100%'
-      'z-index': 999
-    )
-    xdir = '-100%'
-    if nextQuote.length is 0
-      nextQuote = $('.quote-wrapper:first')
-  else
-    nextQuote = $(e.target).prev()
-    nextQuote.css(
-      'left': 0
-      'z-index': 999
-    )
-    xdir = '100%'
-    if nextQuote.length is 0
-      nextQuote = $('.quote-wrapper:last')
+############################################
+# HAMMER JS
+############################################
+# Template.body.swipe = (e, d)->
+#   activeQuote = $(e.target)
+#   console.log d
+#   if d is 1
+#     nextQuote = $(e.target).next()
+#     nextQuote.css(
+#       'left': '100%'
+#       'z-index': 999
+#     )
+#     xdir = '-100%'
+#     if nextQuote.length is 0
+#       nextQuote = $('.quote-wrapper:first')
+#   else
+#     nextQuote = $(e.target).prev()
+#     nextQuote.css(
+#       'left': 0
+#       'z-index': 999
+#     )
+#     xdir = '100%'
+#     if nextQuote.length is 0
+#       nextQuote = $('.quote-wrapper:last')
 
-  console.log 'activeQuote', activeQuote
-  console.log 'nextQuote', nextQuote
+#   console.log 'activeQuote', activeQuote
+#   console.log 'nextQuote', nextQuote
 
 
 
 
-  TweenMax.to activeQuote, 0.31,
-    x: xdir
-    opacity: 0
-    clearProps: 'all'
-    ease: Power4.easeOut
-    onComplete: ->
-      activeQuote.removeClass('active')
+#   TweenMax.to activeQuote, 0.31,
+#     x: xdir
+#     opacity: 0
+#     clearProps: 'all'
+#     ease: Power4.easeOut
+#     onComplete: ->
+#       activeQuote.removeClass('active')
 
-  TweenMax.to nextQuote, 0.31,
-    left: '50%'
-    opacity: 1
-    clearProps: 'all'
-    ease: Power4.easeIn
-    onComplete: ->
-      nextQuote.addClass('active')
+#   TweenMax.to nextQuote, 0.31,
+#     left: '50%'
+#     opacity: 1
+#     clearProps: 'all'
+#     ease: Power4.easeIn
+#     onComplete: ->
+#       nextQuote.addClass('active')
 
-Template.body.helpers
-  swipeH:
-    'swiperight .quote-wrapper.active': (e, tmpl)->
-      e.preventDefault()
-      console.log 'Swipe Right'
-      tmpl.view.template.swipe e, -1
+# Template.body.helpers
+#   swipeH:
+#     'swiperight .quote-wrapper.active': (e, tmpl)->
+#       e.preventDefault()
+#       console.log 'Swipe Right'
+#       tmpl.view.template.swipe e, -1
 
-    'swipeleft .quote-wrapper.active': (e, tmpl)->
-      e.preventDefault()
-      console.log 'Swipe Left'
-      tmpl.view.template.swipe e, 1
+#     'swipeleft .quote-wrapper.active': (e, tmpl)->
+#       e.preventDefault()
+#       console.log 'Swipe Left'
+#       tmpl.view.template.swipe e, 1
+#       console.log e
+############################################
+# END HAMMER JS
+############################################
 
+@touchstart =
+    x: 0
+    y: 0
 
 Template.body.events
-  # 'touchend .quote-wrapper.active': (e)->
-  #   e.preventDefault
+  'touchstart .quote-wrapper.active': (e)->
+    touchstart.x = e.originalEvent.touches[0].pageX
+    touchstart.y = e.originalEvent.touches[0].pageY
 
-  #   activeQuote = $(e.target)
-  #   nextQuote = $(e.target).next()
+  'touchmove .quote-wrapper.active': (e)->
+    e.preventDefault
+    touch = e.originalEvent.touches[0]
 
-  #   # console.log 'activeQuote', activeQuote
-  #   # console.log 'nextQuote', nextQuote
+    activeQuote = $(e.target)
+    # activeQuote.css('left', touch.clientX + 'px')
+    TweenMax.to activeQuote, 0.05,
+      left: touch.clientX + 'px'
 
-  #   if nextQuote.length is 0
-  #     nextQuote = $('.quote-wrapper:first')
 
-  #   nextQuote.css(
-  #     'left': '100%'
-  #     'z-index': 999
-  #   )
+  'touchend .quote-wrapper.active': (e)->
+    e.preventDefault
 
-  #   TweenMax.to activeQuote, 0.31,
-  #     x: '-100%'
-  #     opacity: 0
-  #     clearProps: 'all'
-  #     ease: Power4.easeOut
-  #     onComplete: ->
-  #       activeQuote.removeClass('active')
+    touchend =
+      x: e.originalEvent.changedTouches[0].pageX
+      y: e.originalEvent.changedTouches[0].pageY
 
-  #   TweenMax.to nextQuote, 0.31,
-  #     left: '50%'
-  #     opacity: 1
-  #     clearProps: 'all'
-  #     ease: Power4.easeIn
-  #     onComplete: ->
-  #       nextQuote.addClass('active')
+
+    activeQuote = $(e.target)
+
+    if touchstart.x >= $(window).width()/2.25 and touchstart.x > touchend.x
+      # Swipe Left
+      nextQuote = $(e.target).next()
+
+      if nextQuote.length is 0
+        nextQuote = $('.quote-wrapper:first')
+
+      nextQuote.css(
+        'left': '100%'
+        'z-index': 999
+      )
+
+      TweenMax.to activeQuote, 0.31,
+        x: '-100%'
+        opacity: 0
+        clearProps: 'all'
+        ease: Power4.easeOut
+        onComplete: ->
+          activeQuote.removeClass('active')
+
+      TweenMax.to nextQuote, 0.31,
+        left: '50%'
+        opacity: 1
+        clearProps: 'all'
+        ease: Power4.easeIn
+        onComplete: ->
+          nextQuote.addClass('active')
+
+    else if touchstart.x <= $(window).width()/2.25 and touchstart.x < touchend.x
+      # Swipe Right
+      nextQuote = $(e.target).prev('.quote-wrapper')
+
+      if nextQuote.length is 0
+        console.log 'none'
+        nextQuote = $('.quote-wrapper:last')
+
+      nextQuote.css(
+        'left': '0'
+        'z-index': 999
+      )
+
+      TweenMax.to activeQuote, 0.31,
+        x: '100%'
+        opacity: 0
+        clearProps: 'all'
+        ease: Power4.easeOut
+        onComplete: ->
+          activeQuote.removeClass('active')
+
+      TweenMax.to nextQuote, 0.31,
+        left: '50%'
+        opacity: 1
+        clearProps: 'all'
+        ease: Power4.easeIn
+        onComplete: ->
+          nextQuote.addClass('active')
+
+    else
+      console.log 'revert'
+      TweenMax.to activeQuote, 0.05,
+        left: '50%'
+
 
 
   'touchend .menu': (e)->
