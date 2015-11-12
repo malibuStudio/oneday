@@ -21,39 +21,96 @@
     bg: 'RGBA(0, 91, 177, 1)'
     txt: 'RGBA(255, 255, 255, 0.95)'
 
-Template.body.events
-  'touchend .quote-wrapper.active': (e)->
-    e.preventDefault
-
-    activeQuote = $(e.target)
+Template.body.swipe = (e, d)->
+  activeQuote = $(e.target)
+  console.log d
+  if d is 1
     nextQuote = $(e.target).next()
-
-    console.log 'activeQuote', activeQuote
-    console.log 'nextQuote', nextQuote
-
-    if nextQuote.length is 0
-      nextQuote = $('.quote-wrapper:first')
-
     nextQuote.css(
       'left': '100%'
       'z-index': 999
     )
+    xdir = '-100%'
+    if nextQuote.length is 0
+      nextQuote = $('.quote-wrapper:first')
+  else
+    nextQuote = $(e.target).prev()
+    nextQuote.css(
+      'left': 0
+      'z-index': 999
+    )
+    xdir = '100%'
+    if nextQuote.length is 0
+      nextQuote = $('.quote-wrapper:last')
 
-    TweenMax.to activeQuote, 0.31,
-      x: '-100%'
-      opacity: 0
-      clearProps: 'all'
-      ease: Power4.easeOut
-      onComplete: ->
-        activeQuote.removeClass('active')
+  console.log 'activeQuote', activeQuote
+  console.log 'nextQuote', nextQuote
 
-    TweenMax.to nextQuote, 0.31,
-      left: '50%'
-      opacity: 1
-      clearProps: 'all'
-      ease: Power4.easeIn
-      onComplete: ->
-        nextQuote.addClass('active')
+
+
+
+  TweenMax.to activeQuote, 0.31,
+    x: xdir
+    opacity: 0
+    clearProps: 'all'
+    ease: Power4.easeOut
+    onComplete: ->
+      activeQuote.removeClass('active')
+
+  TweenMax.to nextQuote, 0.31,
+    left: '50%'
+    opacity: 1
+    clearProps: 'all'
+    ease: Power4.easeIn
+    onComplete: ->
+      nextQuote.addClass('active')
+
+Template.body.helpers
+  swipeH:
+    'swiperight .quote-wrapper.active': (e, tmpl)->
+      e.preventDefault()
+      console.log 'Swipe Right'
+      tmpl.view.template.swipe e, -1
+
+    'swipeleft .quote-wrapper.active': (e, tmpl)->
+      e.preventDefault()
+      console.log 'Swipe Left'
+      tmpl.view.template.swipe e, 1
+
+
+Template.body.events
+  # 'touchend .quote-wrapper.active': (e)->
+  #   e.preventDefault
+
+  #   activeQuote = $(e.target)
+  #   nextQuote = $(e.target).next()
+
+  #   # console.log 'activeQuote', activeQuote
+  #   # console.log 'nextQuote', nextQuote
+
+  #   if nextQuote.length is 0
+  #     nextQuote = $('.quote-wrapper:first')
+
+  #   nextQuote.css(
+  #     'left': '100%'
+  #     'z-index': 999
+  #   )
+
+  #   TweenMax.to activeQuote, 0.31,
+  #     x: '-100%'
+  #     opacity: 0
+  #     clearProps: 'all'
+  #     ease: Power4.easeOut
+  #     onComplete: ->
+  #       activeQuote.removeClass('active')
+
+  #   TweenMax.to nextQuote, 0.31,
+  #     left: '50%'
+  #     opacity: 1
+  #     clearProps: 'all'
+  #     ease: Power4.easeIn
+  #     onComplete: ->
+  #       nextQuote.addClass('active')
 
 
   'touchend .menu': (e)->
