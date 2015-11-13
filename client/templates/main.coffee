@@ -21,69 +21,6 @@
     bg: 'RGBA(0, 91, 177, 1)'
     txt: 'RGBA(255, 255, 255, 0.95)'
 
-############################################
-# HAMMER JS
-############################################
-# Template.body.swipe = (e, d)->
-#   activeQuote = $(e.target)
-#   console.log d
-#   if d is 1
-#     nextQuote = $(e.target).next()
-#     nextQuote.css(
-#       'left': '100%'
-#       'z-index': 999
-#     )
-#     xdir = '-100%'
-#     if nextQuote.length is 0
-#       nextQuote = $('.quote-wrapper:first')
-#   else
-#     nextQuote = $(e.target).prev()
-#     nextQuote.css(
-#       'left': 0
-#       'z-index': 999
-#     )
-#     xdir = '100%'
-#     if nextQuote.length is 0
-#       nextQuote = $('.quote-wrapper:last')
-
-#   console.log 'activeQuote', activeQuote
-#   console.log 'nextQuote', nextQuote
-
-
-
-
-#   TweenMax.to activeQuote, 0.31,
-#     x: xdir
-#     opacity: 0
-#     clearProps: 'all'
-#     ease: Power4.easeOut
-#     onComplete: ->
-#       activeQuote.removeClass('active')
-
-#   TweenMax.to nextQuote, 0.31,
-#     left: '50%'
-#     opacity: 1
-#     clearProps: 'all'
-#     ease: Power4.easeIn
-#     onComplete: ->
-#       nextQuote.addClass('active')
-
-# Template.body.helpers
-#   swipeH:
-#     'swiperight .quote-wrapper.active': (e, tmpl)->
-#       e.preventDefault()
-#       console.log 'Swipe Right'
-#       tmpl.view.template.swipe e, -1
-
-#     'swipeleft .quote-wrapper.active': (e, tmpl)->
-#       e.preventDefault()
-#       console.log 'Swipe Left'
-#       tmpl.view.template.swipe e, 1
-#       console.log e
-############################################
-# END HAMMER JS
-############################################
-
 @touchstart =
     x: 0
     y: 0
@@ -199,13 +136,9 @@ Template.body.events
 
   'touchend .menu': (e)->
     e.preventDefault()
-
     pageFromBottom('#page-settings')
 
-  'touchend #page-settings .close': (e)->
-    e.preventDefault()
 
-    pageSlideDown('#page-main')
   'touchstart #page-settings .theme-item': (e)->
     TweenMax.to $(e.target), 0.32,
       borderRadius: '50%'
@@ -215,8 +148,6 @@ Template.body.events
       # clearProps: "all"
 
   'touchend #page-settings .theme-item': (e)->
-    e.preventDefault()
-
     themeName = $(e.target).parent().attr('data-theme')
 
     bgColor = theme[themeName].bg
@@ -233,12 +164,11 @@ Template.body.events
         $('.current-page').removeClass('current-page')
         $('#page-main').addClass('current-page')
 
-
     pageMain = document.getElementById('page-main')
     quotes = document.querySelectorAll('.txt')
 
-
     pageMain.style.backgroundColor = bgColor
+
     for quote in quotes
       quote.style.opacity = 0
       quote.style.color = txtColor
@@ -249,10 +179,76 @@ Template.body.events
         delay: 0.9
         opacity: 1
 
+
 Template.body.onRendered ->
   pageMain = document.getElementById('page-main')
   quotes = document.querySelectorAll('.txt')
 
-  pageMain.style.backgroundColor = theme.default.bg
+  bgColor = theme.default.bg
+  txtColor = theme.default.txt
+
   for quote in quotes
-    quote.style.color = theme.default.txt
+    quote.style.color = txtColor
+
+  pageMain.style.backgroundColor = bgColor
+
+
+
+
+
+
+
+
+# @mcom=
+#   onMenuDown: (e)->
+#     e.preventDefault()
+#     pageFromBottom '#page-settings'
+#   onMenuHandler:
+#     onmouseup: (e)-> mcom.onMenuDown(e)
+#     ontouchend: (e)-> mcom.onMenuDown(e)
+#   onCloseDown: (e)->
+#     e.preventDefault()
+#   onCloseHandler:
+#     onmouseup: (e)-> mcom.onCloseDown(e)
+#     ontouchend: (e)-> mcom.onCloseDown(e)
+#   onThemeItemDown: (e)->
+#     e.preventDefault()
+#   onThemeItemHandler:
+#     onmouseup: (e)-> mcom.onThemeItemDown(e)
+#     ontouchend: (e)-> mcom.onThemeItemDown(e)
+#   themeItem:
+#     controller: (data)-> data
+#     view: (data)->
+#       m ".theme-item[data-theme='#{data.theme}']", mcom.onThemeItemHandler,
+#         m ".theme-thumb.#{data.theme}"
+#   Main:
+#     view: ->
+#       m "#viewport",
+#         m ".page.current-page#page-main",
+#           style:
+#             backgroundColor: theme.default.bg
+#           m ".menu.txt", mcom.onMenuHandler,
+#             m ".wrapper",
+#               m "i.ion-ios-gear-outline"
+#           m ".quote-wrapper",
+#             m ".quote.txt",
+#               style:
+#                 color: theme.default.txt
+#             , m.trust "서두르지 말라. <br/> 그러나 쉬지도 말라."
+#             m ".author.txt",
+#               style:
+#                 color: theme.default.txt
+#             , "- 누군가가"
+#         m ".page#page-settings",
+#           m ".close", mcom.onCloseHandler,
+#             m "i.ion-ios-close-empty"
+#           m ".settings-container",
+#             m ".theme-container",
+#               m ".settings-title", "테마선택"
+#               m ".theme-list",
+#                 m.component mcom.themeItem, theme: "default"
+#                 m.component mcom.themeItem, theme: "red"
+#                 m.component mcom.themeItem, theme: "blue"
+
+# Meteor.startup ->
+#   m.mount document.body, mcom.Main
